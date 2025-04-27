@@ -27,7 +27,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    // New method: generate token with roles included
     public String generateToken(UserDetails userDetails, Set<Role> roles) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles.stream().map(Enum::name).collect(Collectors.toList()));

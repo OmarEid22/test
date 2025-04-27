@@ -1,7 +1,9 @@
 package com.test.security.product;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -14,4 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice
     );
+
+    List<Product> findBySellerId(Long sellerId);
+
+    void deleteByIdAndSellerId(Long productId, Long sellerId);
+
+    Product findByIdAndSellerId(Long productId, Long sellerId);
 }

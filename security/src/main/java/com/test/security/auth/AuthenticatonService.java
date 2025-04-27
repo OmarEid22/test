@@ -19,16 +19,11 @@ public class AuthenticatonService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        Role role = request.getRole() != null
-                ? Role.valueOf(request.getRole().toUpperCase())
-                : Role.USER;
-
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(role)
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));

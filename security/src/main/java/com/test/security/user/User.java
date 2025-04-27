@@ -1,5 +1,6 @@
 package com.test.security.user;
 
+import com.test.security.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,9 +17,11 @@ import java.util.List;
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue
     private Integer id;
+
     private String firstname;
     private String lastname;
     private String email;
@@ -28,6 +31,18 @@ public class User implements UserDetails {
     @Setter
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "seller")
+    private List<Product> products;
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

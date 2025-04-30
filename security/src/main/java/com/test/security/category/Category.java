@@ -1,5 +1,8 @@
 package com.test.security.category;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.test.security.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,6 +27,10 @@ public class Category {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonBackReference
+        private Set<Product> products = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -39,5 +46,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Product> getProducts() {
+        return products == null ? Collections.emptySet() : Collections.unmodifiableSet(products);
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

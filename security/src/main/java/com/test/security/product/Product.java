@@ -1,16 +1,17 @@
 package com.test.security.product;
-import com.test.security.category.Category;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.test.security.category.Category;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -28,10 +29,24 @@ public class Product {
     private double price;
     private String description;
     private String image;
+    @Column(nullable = true)
+    private  Long quantityAvailable;
+    @Column(nullable = true)
+    private Boolean specialOffer;
+    @Column(nullable = true)
+    private String hardwareSpecifications;
+
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+//    @Column(name = "seller_id" , nullable = false);
+//    private long sellerId;
+
+
+
+
 
     public Long getId() {
         return id;
@@ -80,4 +95,28 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+    public Long getQuantityAvailable() {
+        return quantityAvailable;
+    }
+    public void setQuantityAvailable(Long quantityAvailable) {
+        this.quantityAvailable = quantityAvailable;
+    }
+
+    public Boolean getSpecialOffer() {
+        return specialOffer;
+    }
+
+    public void setSpecialOffer(Boolean specialOffer) {
+        this.specialOffer = specialOffer;
+    }
+
+    public String getHardwareSpecifications() {
+        return hardwareSpecifications;
+    }
+    public void setHardwareSpecifications(String hardwareSpecifications) {
+        this.hardwareSpecifications = hardwareSpecifications;
+    }
+
+
+
 }

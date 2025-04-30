@@ -1,9 +1,14 @@
 package com.test.security.products;
 import com.test.security.product.Product;
+import org.hibernate.Hibernate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -15,9 +20,10 @@ public class ProductController {
         this.productService = productService;
     }
 
+
     @GetMapping
-    public List<Product> getAllProducts(Long categoryId, Double minPrice, Double maxPrice) {
-        return productService.getAllProducts(categoryId, minPrice, maxPrice);
+    public List<Product> getAllProducts(@RequestParam(required = false) Long categoryId) {
+        return productService.getAllProducts(categoryId);
     }
 
     @GetMapping("/{productId}")
@@ -32,7 +38,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public Optional<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
         return productService.updateProduct(productId, product);
     }

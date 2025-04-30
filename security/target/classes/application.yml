@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/jwt_security
+    url: jdbc:postgresql://localhost:5432/ezsmartdb
     username: postgres
-    password: omar@227@eid
+    password: 1234
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -13,3 +13,8 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+paypal:
+  client-id: AU06lIPNQMm0onL8NczeNhNE3OhQgm4R31VSqnzbRIQIWYeZSAC1dwvAqTEfNzU_c68it7yVvkzSM99H
+  client-secret: ECdPA1hUYLd2ZqOGCgEDkqjskLNad2qM3499U1O0jtS0tWfUL92bghI03Zkd6ZMU-rOv9r9d1t4YQ9UN
+  mode: sandbox # Use #sandbox' for testing and 'live' for Production

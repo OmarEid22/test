@@ -8,10 +8,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.test.security.category.Category;
-
+import com.test.security.user.User;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Data
 @Builder
@@ -41,40 +42,23 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-//    @Column(name = "seller_id" , nullable = false);
-//    private long sellerId;
-
-
-
-
-
     public Long getId() {
         return id;
     }
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = true)
+    private User seller;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public double getPrice() {
-        return price;
-    }
+    public String getDescription() { return description; }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -119,4 +103,6 @@ public class Product {
 
 
 
+    public User getSeller() { return seller; }
+    public void setSeller(User seller) { this.seller = seller; }
 }

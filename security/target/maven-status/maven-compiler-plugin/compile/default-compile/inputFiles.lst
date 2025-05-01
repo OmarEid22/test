@@ -9,11 +9,12 @@ C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\cate
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\category\CategoryRepository.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\category\CategoryService.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\config\ApplicationConfig.java
-C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\config\JwtAuthenticationFillter.java
+C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\config\JwtAuthenticationFilter.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\config\JwtService.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\config\SecurityConfigration.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\data\FakeDataGenerator.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\demo\DemoController.java
+C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\PasswordEncoderUtil.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\payment\PaypalConfig.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\payment\PaypalController.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\payment\PaypalIntegrationApplication.java
@@ -27,4 +28,7 @@ C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\prod
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\SecurityApplication.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\Role.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\User.java
+C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\UserController.java
+C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\UserDto.java
 C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\UserRepository.java
+C:\Users\user\Desktop\EZsmart\test\security\src\main\java\com\test\security\user\UserService.java

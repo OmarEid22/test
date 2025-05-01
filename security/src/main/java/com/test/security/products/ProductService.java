@@ -1,9 +1,12 @@
 package com.test.security.products;
+
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import org.hibernate.Hibernate;
+import com.test.security.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,32 +27,71 @@ public class ProductService {
         return products;
     }
 
+
+    // Specific product to all
     public Optional<Product> getProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
-    public Product addProduct(Product product) {
+    // Seller adds a product for themselves
+    public Product addProduct(Product product, User seller) {
+        product.setSeller(seller);
         return productRepository.save(product);
     }
 
-    public Optional<Product> updateProduct(Long productId, Product updatedProduct) {
+    // Admin adds a product with or without assigning a seller
+    public Product addProductAsAdmin(Product product, User optionalSeller) {
+        product.setSeller(optionalSeller); // could be null
+        return productRepository.save(product);
+    }
+
+    // Seller updating only their product
+    public Optional<Product> updateProduct(Long productId, Product updatedProduct, Long sellerId) {
+        Product existingProduct = productRepository.findByIdAndSellerId(productId, sellerId);
+        if (existingProduct == null) {
+            return Optional.empty();
+        }
+        updateProductFields(existingProduct, updatedProduct);
+        return Optional.of(productRepository.save(existingProduct));
+    }
+
+    // Admin updating any product
+    public Optional<Product> updateProductAsAdmin(Long productId, Product updatedProduct) {
         return productRepository.findById(productId).map(existingProduct -> {
-            existingProduct.setName(updatedProduct.getName());
-            existingProduct.setPrice(updatedProduct.getPrice());
-            existingProduct.setDescription(updatedProduct.getDescription());
-            existingProduct.setImage(updatedProduct.getImage());
-            existingProduct.setQuantityAvailable(updatedProduct.getQuantityAvailable());
-            existingProduct.setSpecialOffer(updatedProduct.getSpecialOffer());
-            existingProduct.setCategory(updatedProduct.getCategory());
-            existingProduct.setHardwareSpecifications(updatedProduct.getHardwareSpecifications());
-            existingProduct.setSpecialOffer(updatedProduct.getSpecialOffer());
+            updateProductFields(existingProduct, updatedProduct);
             return productRepository.save(existingProduct);
         });
     }
 
-    public void deleteProduct(Long productId) {
-        if (productRepository.existsById(productId)) {
-            productRepository.deleteById(productId);
+    // Seller deletes only their product
+    public boolean deleteProduct(Long productId, Long sellerId) {
+        Product product = productRepository.findByIdAndSellerId(productId, sellerId);
+        if (product != null) {
+            productRepository.deleteByIdAndSellerId(productId, sellerId);
+            return true;
         }
+        return false;
+    }
+
+    // Admin deletes any product
+    public void deleteProductAsAdmin(Long productId) {
+        productRepository.deleteById(productId);
+    }
+
+    // Seller views their products
+    public List<Product> getProductsBySeller(Long sellerId) {
+        return productRepository.findBySellerId(sellerId);
+    }
+
+    // Shared update logic
+    private void updateProductFields(Product existingProduct, Product updatedProduct) {
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setImage(updatedProduct.getImage());
+        existingProduct.setCategory(updatedProduct.getCategory());
+        existingProduct.setQuantityAvailable(updatedProduct.getQuantityAvailable());
+        existingProduct.setSpecialOffer(updatedProduct.getSpecialOffer());
+        existingProduct.setHardwareSpecifications(updatedProduct.getHardwareSpecifications());
     }
 }

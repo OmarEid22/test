@@ -29,3 +29,6 @@ logging:
     root: debug
     org.springframework.security: debug
     org.hibernate.SQL: debug
+
+server:
+  port: 8080

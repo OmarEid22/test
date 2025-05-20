@@ -46,7 +46,8 @@ public class ProductController {
         if (seller == null) {
             throw new RuntimeException("No seller associated with this user");
         }
-        return productService.addProductAsSeller(product, seller);
+        product.setSeller(seller);
+        return productService.addProductAsSeller(product);
     }
 
     // admin to seller or no seller

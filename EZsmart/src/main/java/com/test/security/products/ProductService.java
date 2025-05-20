@@ -35,7 +35,7 @@ public class ProductService {
     }
 
     // Seller adds a product for themselves
-    public Product addProductAsSeller(Product product, Seller seller) {
+    public Product addProductAsSeller(Product product) {
         return productRepository.save(product);
     }
 

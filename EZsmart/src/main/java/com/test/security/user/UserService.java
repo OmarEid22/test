@@ -1,5 +1,8 @@
 package com.test.security.user;
 
+import com.test.security.seller.Seller;
+import com.test.security.seller.SellerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,33 +11,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
 
-    // admin >>> all sellers
-    public List<UserDto> getAllSellers() {
-        return userRepository.findAll()
-                .stream()
-                .filter(user -> user.getRole() == Role.ROLE_SELLER)
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+    UserService(UserRepository userRepository , SellerRepository sellerRepository) {
+        this.userRepository = userRepository;
+        this.sellerRepository = sellerRepository;
     }
 
-    // anyone >>> seller by ID
-    public Optional<UserDto> getSellerById(Integer sellerId) {
-        return userRepository.findById(sellerId)
-                .filter(user -> user.getRole() == Role.ROLE_SELLER)
-                .map(this::mapToDto);
-    }
 
-    private UserDto mapToDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getFirstname(),
-                user.getLastname(),
-                user.getEmail()
-        );
+    //update user role and seller_id
+    @Transactional
+    public void updateUserRoleAndSeller(User user, Role role, Seller seller) {
+        Seller existingSeller = sellerRepository.findById(seller.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Seller does not exist"));
+
+        user.setRole(role);
+        user.setSeller(existingSeller);
+        userRepository.save(user);
     }
 }

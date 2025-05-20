@@ -1,14 +1,18 @@
 package com.test.security.user;
 
 import com.test.security.product.Product;
+import com.test.security.seller.Seller;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -26,22 +30,20 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
+    private String mobile;
 
     @Getter
     @Setter
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "seller")
-    private List<Product> products;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = true)
+    private Seller seller;
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    private List<Map<String, Object>> addresses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,5 +78,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public List<Map<String, Object>> getAddresses() {
+        return addresses;
+    }
+    public void setAddresses(List<Map<String, Object>> addresses) {
+        this.addresses = addresses;
     }
 }

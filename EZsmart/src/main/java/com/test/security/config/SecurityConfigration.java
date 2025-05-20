@@ -34,6 +34,7 @@ public class SecurityConfigration {
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/categories/**").permitAll()
                         .requestMatchers("/api/sellers/**").permitAll()
+                        .requestMatchers("/api/sellers").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

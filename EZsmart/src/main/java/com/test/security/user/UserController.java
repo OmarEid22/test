@@ -14,16 +14,4 @@ public class UserController {
 
     private final UserService userService;
 
-    // admin >>> all sellers
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UserDto> getAllSellers() {
-        return userService.getAllSellers();
-    }
-
-    // anyone >>> seller by ID
-    @GetMapping("/{sellerId}")
-    public Optional<UserDto> getSellerById(@PathVariable Integer sellerId) {
-        return userService.getSellerById(sellerId);
-    }
 }

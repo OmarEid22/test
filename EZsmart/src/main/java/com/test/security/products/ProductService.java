@@ -2,6 +2,7 @@ package com.test.security.products;
 
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
+import com.test.security.seller.Seller;
 import org.hibernate.Hibernate;
 import com.test.security.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,12 @@ public class ProductService {
     }
 
     // Seller adds a product for themselves
-    public Product addProduct(Product product, User seller) {
-        product.setSeller(seller);
+    public Product addProductAsSeller(Product product, Seller seller) {
         return productRepository.save(product);
     }
 
     // Admin adds a product with or without assigning a seller
-    public Product addProductAsAdmin(Product product, User optionalSeller) {
-        product.setSeller(optionalSeller); // could be null
+    public Product addProductAsAdmin(Product product, Seller seller) {
         return productRepository.save(product);
     }
 
@@ -67,7 +66,7 @@ public class ProductService {
     public boolean deleteProduct(Long productId, Long sellerId) {
         Product product = productRepository.findByIdAndSellerId(productId, sellerId);
         if (product != null) {
-            productRepository.deleteByIdAndSellerId(productId, sellerId);
+            productRepository.deleteById(productId);
             return true;
         }
         return false;

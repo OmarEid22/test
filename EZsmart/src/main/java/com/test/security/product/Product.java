@@ -2,6 +2,7 @@ package com.test.security.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.test.security.seller.Seller;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,12 +43,13 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+    private Seller seller;
+
     public Long getId() {
         return id;
     }
-    @ManyToOne
-    @JoinColumn(name = "seller_id", nullable = true)
-    private User seller;
 
     public void setId(Long id) { this.id = id; }
 
@@ -101,8 +103,11 @@ public class Product {
         this.hardwareSpecifications = hardwareSpecifications;
     }
 
+    public Seller getSeller() {
+        return seller;
+    }
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
 
-
-    public User getSeller() { return seller; }
-    public void setSeller(User seller) { this.seller = seller; }
 }

@@ -2,6 +2,7 @@ package com.test.security.products;
 
 import com.test.security.product.Product;
 
+import com.test.security.seller.Seller;
 import com.test.security.user.User;
 import com.test.security.user.UserRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,15 +39,21 @@ public class ProductController {
     @PostMapping("/seller")
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public Product addProductAsSeller(@RequestBody Product product,
-                                      @AuthenticationPrincipal User seller) {
-        return productService.addProduct(product, seller);
+                                      @AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
+        return productService.addProductAsSeller(product, seller);
     }
 
     // admin to seller or no seller
     @PostMapping("/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Product addProductAsAdmin(@RequestBody Product product) {
-        return productService.addProductAsAdmin(product, product.getSeller());
+        return productService.addProductAsAdmin(product, null);
     }
 
     // seller updating his
@@ -54,7 +61,13 @@ public class ProductController {
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public Optional<Product> updateProductAsSeller(@PathVariable Long productId,
                                                    @RequestBody Product product,
-                                                   @AuthenticationPrincipal User seller) {
+                                                   @AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
         return productService.updateProduct(productId, product, seller.getId().longValue());
     }
 
@@ -70,7 +83,13 @@ public class ProductController {
     @DeleteMapping("/seller/{productId}")
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public void deleteProductAsSeller(@PathVariable Long productId,
-                                      @AuthenticationPrincipal User seller) {
+                                      @AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
         productService.deleteProduct(productId, seller.getId().longValue());
     }
 
@@ -84,7 +103,13 @@ public class ProductController {
     //seller see only his
     @GetMapping("/seller")
     @PreAuthorize("hasRole('ROLE_SELLER')")
-    public List<Product> getMyProducts(@AuthenticationPrincipal User seller) {
+    public List<Product> getMyProducts(@AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
         return productService.getProductsBySeller(seller.getId().longValue());
     }
 }

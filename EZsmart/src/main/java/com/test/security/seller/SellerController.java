@@ -1,0 +1,75 @@
+package com.test.security.seller;
+
+
+import com.test.security.user.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLOutput;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/sellers")
+public class SellerController {
+
+    private final SellerService sellerService;
+    private final UserRepository userRepository;
+    private final UserService userService;
+
+    @Autowired
+    public SellerController(SellerService sellerService , UserRepository userRepository , UserService userService) {
+        this.sellerService = sellerService;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Seller getSellerById(@PathVariable Integer id) {
+        return sellerService.getSellerById(id);
+    }
+
+    @GetMapping
+    @ResponseBody
+    public List<Seller> getAllSellers() {
+        return sellerService.getAllSellers();
+    }
+
+    // Create a new seller
+    @PostMapping
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public Seller createSeller(@RequestBody Seller seller, @AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if(user.getRole().equals(Role.ROLE_SELLER)) {
+            throw new RuntimeException("User is already a seller");
+        }
+        else if(user.getRole().equals(Role.ROLE_ADMIN)) {
+            throw new RuntimeException("User is an admin");
+        }
+        else {
+            seller.setUser(user);
+            Seller newSeller = sellerService.createSeller(seller);
+            userService.updateUserRoleAndSeller(user, Role.ROLE_SELLER, seller);
+            return newSeller;
+        }
+    }
+
+    //delete seller
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SELLER')")
+    public void deleteSeller(@RequestBody Seller seller, @AuthenticationPrincipal User authenticatedUser) {
+        if (!seller.getUser().getId().equals(authenticatedUser.getId()) && !authenticatedUser.getRole().equals(Role.ROLE_ADMIN)) {
+            throw new RuntimeException("You are not authorized to delete this seller.");
+        }
+        sellerService.deleteSeller(seller.getId());
+    }
+
+
+
+
+}

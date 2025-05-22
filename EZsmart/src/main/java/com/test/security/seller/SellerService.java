@@ -19,7 +19,10 @@ public class SellerService {
     }
 
     public void deleteSeller(Integer id) {
-        sellerRepository.deleteById(id);
+        Seller seller = sellerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+        sellerRepository.delete(seller);
     }
 
     //get all sellers

@@ -1,5 +1,7 @@
 package com.test.security.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.test.security.product.Product;
 import com.test.security.seller.Seller;
 import com.vladmihalcea.hibernate.type.json.JsonType;
@@ -37,6 +39,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = true)
     private Seller seller;

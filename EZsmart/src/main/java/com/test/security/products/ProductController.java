@@ -104,7 +104,7 @@ public class ProductController {
     //seller see only his
     @GetMapping("/seller")
     @PreAuthorize("hasRole('ROLE_SELLER')")
-    public List<Product> getMyProducts(@AuthenticationPrincipal User authenticatedUser) {
+    public List<Product> getSellerProducts(@AuthenticationPrincipal User authenticatedUser) {
         User user = userRepository.findById(authenticatedUser.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Seller seller = user.getSeller();

@@ -19,7 +19,7 @@ public class SellerController {
     private final UserService userService;
 
     @Autowired
-    public SellerController(SellerService sellerService , UserRepository userRepository , UserService userService) {
+    public SellerController(SellerService sellerService, UserRepository userRepository, UserService userService) {
         this.sellerService = sellerService;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -44,13 +44,11 @@ public class SellerController {
     public Seller createSeller(@RequestBody Seller seller, @AuthenticationPrincipal User authenticatedUser) {
         User user = userRepository.findById(authenticatedUser.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if(user.getRole().equals(Role.ROLE_SELLER)) {
+        if (user.getRole().equals(Role.ROLE_SELLER)) {
             throw new RuntimeException("User is already a seller");
-        }
-        else if(user.getRole().equals(Role.ROLE_ADMIN)) {
+        } else if (user.getRole().equals(Role.ROLE_ADMIN)) {
             throw new RuntimeException("User is an admin");
-        }
-        else {
+        } else {
             seller.setUser(user);
             Seller newSeller = sellerService.createSeller(seller);
             userService.updateUserRoleAndSeller(user, Role.ROLE_SELLER, seller);
@@ -62,13 +60,17 @@ public class SellerController {
     @DeleteMapping("/{id}")
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SELLER')")
-    public void deleteSeller(@RequestBody Seller seller, @AuthenticationPrincipal User authenticatedUser) {
-        if (!seller.getUser().getId().equals(authenticatedUser.getId()) && !authenticatedUser.getRole().equals(Role.ROLE_ADMIN)) {
+    public void deleteSeller(@AuthenticationPrincipal User authenticatedUser, @PathVariable Integer id) {
+        if (!authenticatedUser.getRole().equals(Role.ROLE_SELLER) && !authenticatedUser.getRole().equals(Role.ROLE_ADMIN)) {
             throw new RuntimeException("You are not authorized to delete this seller.");
         }
-        sellerService.deleteSeller(seller.getId());
+        Integer sellerId = authenticatedUser.getRole().equals(Role.ROLE_SELLER) ? authenticatedUser.getSeller().getId() : id;
+        System.out.println("Authenticated user: " + authenticatedUser.getEmail());
+        System.out.println("Role: " + authenticatedUser.getRole());
+        System.out.println("Path ID: " + id);
+        System.out.println("Deleting seller with ID: " + sellerId);
+        sellerService.deleteSeller(sellerId);
     }
-
 
 
 

@@ -1,5 +1,7 @@
 package com.test.security.seller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.test.security.product.Product;
 import com.test.security.user.User;
@@ -29,7 +31,7 @@ public class Seller {
     @GeneratedValue
     private int id;
 
-
+    @JsonManagedReference
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
@@ -51,7 +53,7 @@ public class Seller {
     private List<Map<String, Object>> addresses;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+//    private List<Product> products = new ArrayList<>();
 
 
 

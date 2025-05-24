@@ -3,6 +3,7 @@ package com.test.security.seller;
 
 import com.test.security.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,17 @@ public class SellerController {
 
     @GetMapping
     @ResponseBody
-    public List<Seller> getAllSellers() {
+    public List<Seller> getAllSellers(@RequestParam(required = false) SellerStatus status, 
+                                      @AuthenticationPrincipal User authenticatedUser) {
+        // If status filter is provided, verify admin role
+        if (status != null) {
+            if (!authenticatedUser.getRole().equals(Role.ROLE_ADMIN)) {
+                throw new RuntimeException("Only administrators can filter sellers by status");
+            }
+            return sellerService.getSellersByStatus(status);
+        }
+        
+        // No status filter, return all sellers
         return sellerService.getAllSellers();
     }
 
@@ -56,6 +67,17 @@ public class SellerController {
             userService.updateUserRoleAndSeller(user, Role.ROLE_SELLER, seller);
             return newSeller;
         }
+    }
+
+    @PutMapping("/{id}/status")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Seller> updateSellerStatus(
+            @PathVariable Integer id,
+            @RequestBody SellerStatusRequest statusRequest) {
+        return sellerService.updateSellerStatus(id, statusRequest.getStatus())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     //delete seller

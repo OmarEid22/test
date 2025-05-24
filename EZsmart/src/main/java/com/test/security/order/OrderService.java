@@ -1,5 +1,6 @@
 package com.test.security.order;
 
+import com.test.security.coupon.CouponService;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import com.test.security.user.User;
@@ -20,6 +21,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final CouponService couponService;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -51,6 +53,7 @@ public class OrderService {
                 .status(OrderStatus.PENDING)
                 .shippingAddress(orderRequest.getShippingAddress())
                 .paymentMethod(orderRequest.getPaymentMethod())
+                .couponCode(orderRequest.getCouponCode())
                 .build();
         
         // Calculate total amount and add order items

@@ -45,12 +45,17 @@ public class Seller {
     private String logo;
     private String banner;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private SellerStatus status = SellerStatus.PENDING_VERIFICATION;
+
     //list of addresses
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     private List<Map<String, Object>> addresses;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Product> products = new ArrayList<>();
 
 
@@ -131,6 +136,14 @@ public class Seller {
     }
     public void setBanner(String banner) {
         this.banner = banner;
+    }
+
+    public SellerStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(SellerStatus status) {
+        this.status = status;
     }
 
 //    public List<JsonNode> getAddresses() {

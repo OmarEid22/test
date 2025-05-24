@@ -14,6 +14,7 @@ import java.util.List;
 public class OrderRequest {
     private String shippingAddress;
     private String paymentMethod;
+    private String couponCode;
     private List<OrderItemRequest> items;
 }
 
@@ -21,6 +22,7 @@ public class OrderRequest {
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 class OrderItemRequest {
     private Long productId;
     private Integer quantity;

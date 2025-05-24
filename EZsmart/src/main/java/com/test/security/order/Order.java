@@ -31,6 +31,11 @@ public class Order {
     
     private Double totalAmount;
     
+    // Added for coupon functionality
+    private String couponCode;
+    private Double originalAmount;
+    private Double discountAmount;
+    
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     

@@ -1,0 +1,71 @@
+package com.test.security.orderItem;
+
+import com.test.security.user.User;
+import com.test.security.seller.Seller;
+import com.test.security.product.Product;
+import com.test.security.products.ProductService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/order-items")
+@RequiredArgsConstructor
+public class OrderItemController {
+    private final OrderItemService orderItemService;
+    private final ProductService productService;
+
+
+    @PostMapping
+    public ResponseEntity<OrderItemDTO> createOrderItem(@RequestBody OrderItemRequest orderItemRequest) {
+        return ResponseEntity.ok(orderItemService.createOrderItem(orderItemRequest));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderItemDTO> getOrderItem(@PathVariable Long id) {
+        return ResponseEntity.ok(orderItemService.getOrderItemById(id));
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<OrderItemDTO> updateOrderItemStatus(
+            @PathVariable Long id,
+            @RequestBody OrderItemStatusRequest request,
+            @AuthenticationPrincipal User authenticatedUser) {
+        OrderItemDTO orderItem = orderItemService.getOrderItemById(id);
+        Product product = productService.getProductById(orderItem.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        
+        Seller seller = product.getSeller();
+        if(!seller.getId().equals(authenticatedUser.getSeller().getId())) {
+            throw new AccessDeniedException("You are not authorized to access this resource");
+        }
+        return ResponseEntity.ok(orderItemService.updateOrderItemStatus(id, request.getStatus()));
+    }
+
+    @GetMapping("/seller/{sellerId}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<List<OrderItemDTO>> getOrderItemsBySellerId(
+            @PathVariable int sellerId,
+            @AuthenticationPrincipal User authenticatedUser) {
+        System.out.println("sellerId: " + sellerId);
+        System.out.println("authenticatedUser: " + authenticatedUser.getSeller().getId());
+        if (authenticatedUser.getSeller().getId() != sellerId) {
+            throw new AccessDeniedException("You are not authorized to access this resource");
+        }
+        return ResponseEntity.ok(orderItemService.getOrderItemsBySellerId(sellerId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
+        orderItemService.deleteOrderItem(id);
+        return ResponseEntity.noContent().build();
+    }
+} 

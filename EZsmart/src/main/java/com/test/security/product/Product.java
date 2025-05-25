@@ -10,9 +10,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.test.security.category.Category;
 import com.test.security.user.User;
+import com.test.security.orderItem.OrderItem;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+
 
 
 @Data
@@ -46,6 +49,11 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "seller_id",referencedColumnName = "id", nullable = false)
     private Seller seller;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
+
 
     public Long getId() {
         return id;

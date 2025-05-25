@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
@@ -25,8 +26,6 @@ import java.util.Map;
 @Table(name = "sellers")
 public class Seller {
 
-
-
     @Id
     @GeneratedValue
     private int id;
@@ -34,6 +33,7 @@ public class Seller {
     @JsonManagedReference
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @ToString.Exclude
     private User user;
 
     //name , mobie , mail , bankAccountNumber , bankAccountHolderName , TIN , swiftCode , logo , banner
@@ -54,8 +54,6 @@ public class Seller {
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Product> products = new ArrayList<>();
-
-
 
     //getters and setters
     public Integer getId() {
@@ -141,9 +139,5 @@ public class Seller {
 //    public void setAddresses(List<JsonNode> addresses) {
 //        this.addresses = addresses;
 //    }
-
-
-
-
 
 }

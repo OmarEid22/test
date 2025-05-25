@@ -29,8 +29,9 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-        @JsonBackReference
-        private Set<Product> products = new HashSet<>();
+    @JsonBackReference
+    @Builder.Default
+    private Set<Product> products = new HashSet<>();
 
     public Long getId() {
         return id;

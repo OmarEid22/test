@@ -42,6 +42,7 @@ public class User implements UserDetails {
     @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = true)
+    @ToString.Exclude
     private Seller seller;
 
     @Type(JsonType.class)

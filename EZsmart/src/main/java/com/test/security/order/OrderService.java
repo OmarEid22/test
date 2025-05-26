@@ -85,6 +85,12 @@ public class OrderService {
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
         
+        // Apply coupon if provided
+        if (orderRequest.getCouponCode() != null) {
+            double discountAmount = couponService.calculateDiscount(orderRequest.getCouponCode(), totalAmount);
+            order.setTotalAmount(totalAmount - discountAmount);
+        }
+        
         Order savedOrder = orderRepository.save(order);
         return new OrderDTO(savedOrder);
     }

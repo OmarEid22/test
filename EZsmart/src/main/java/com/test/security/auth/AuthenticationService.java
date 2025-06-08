@@ -11,6 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
+import com.test.security.otp.OtpRequest;
+import com.test.security.otp.OtpService;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +22,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final OtpService otpService;
+    private final EmailService emailService;
 
     public AuthenticationResponse register(RegisterRequest request) {
 
@@ -40,25 +44,56 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(authenticationRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-            var user = repository.findByEmail(request.getEmail())
-                    .orElseThrow();
-            var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .roles(Collections.singleton(user.getRole()))
-                    .build();
-        }catch (AuthenticationException e){
-            //log the error
-            log.error("Authentication failed for user: {}", request.getEmail());
-            throw e;
+     public AuthenticationResponse authenticate(authenticationRequest request) {
+          try {
+              authenticationManager.authenticate(
+                      new UsernamePasswordAuthenticationToken(
+                              request.getEmail(),
+                              request.getPassword()
+                      )
+              );
+              var user = repository.findByEmail(request.getEmail())
+                      .orElseThrow();
+              var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));
+              return AuthenticationResponse.builder()
+                      .token(jwtToken)
+                      .roles(Collections.singleton(user.getRole()))
+                      .build();
+          }catch (AuthenticationException e){
+              //log the error
+              log.error("Authentication failed for user: {}", request.getEmail());
+              throw e;
+          }
+     }
+
+    public void requestOtp(OtpRequest request) {
+        String otp = otpService.generateOtp(request.getEmail());
+        emailService.sendOtpEmail(request.getEmail(), otp);
+    }
+
+    public AuthenticationResponse verifyOtpAndAuthenticate(OtpRequest request) {
+        if (!otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            throw new RuntimeException("Invalid or expired OTP");
         }
+
+        // Check if user exists
+        User user = repository.findByEmail(request.getEmail())
+                .orElseGet(() -> createNewUser(request.getEmail()));
+
+        var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .roles(Collections.singleton(user.getRole()))
+                .build();
+    }
+
+    private User createNewUser(String email) {
+        
+        User newUser = User.builder()
+                .email(email)
+                .role(Role.ROLE_USER)
+                .build();
+        
+        return repository.save(newUser);
     }
 }

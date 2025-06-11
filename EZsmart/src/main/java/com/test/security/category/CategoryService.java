@@ -1,6 +1,8 @@
 package com.test.security.category;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +12,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll().stream()
@@ -31,5 +34,12 @@ public class CategoryService {
 
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    public List<CategorySalesDTO> getTopSellingCategoriesBySeller(Long sellerId) {
+        return categoryRepository.findTopSellingCategoriesBySellerId(
+            sellerId, 
+            PageRequest.of(0, 5)  // Get top 5 results
+        );
     }
 }

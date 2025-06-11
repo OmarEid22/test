@@ -71,4 +71,9 @@ public class OrderItemService {
                 .orElseThrow(() -> new EntityNotFoundException("Order item not found"));
         return new OrderItemDTO(orderItem);
     }
+
+    public SellerOrderStatsDTO getSellerOrderStats(Long sellerId) {
+        return orderItemRepository.getSellerOrderStats(sellerId)
+                .orElse(new SellerOrderStatsDTO(0L, 0L, 0.0, sellerId, null));
+    }
 } 

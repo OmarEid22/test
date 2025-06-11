@@ -39,7 +39,8 @@ public class ProfileDTO {
     public static class SellerDTO {
 
         private int id;
-        private String name;
+        private String sellerName;
+        private String businessName;
         private String mobile;
         private String mail;
         private String bankAccountNumber;
@@ -48,14 +49,15 @@ public class ProfileDTO {
         private String swiftCode;
         private String logo;
         private String banner;
-        private List<Map<String, Object>> addresses;
+        private Map<String, Object> address;
 
         public static SellerDTO fromSeller(Seller seller) {
             if (seller == null) return null;
             
             return SellerDTO.builder()
                     .id(seller.getId())
-                    .name(seller.getName())
+                    .sellerName(seller.getName())
+                    .businessName(seller.getBusinessName())
                     .mobile(seller.getMobile())
                     .mail(seller.getMail())
                     .bankAccountNumber(seller.getBankAccountNumber())
@@ -64,7 +66,7 @@ public class ProfileDTO {
                     .swiftCode(seller.getSwiftCode())
                     .logo(seller.getLogo())
                     .banner(seller.getBanner())
-                    .addresses(seller.getAddresses())
+                    .address(seller.getAddress())
                     .build();
         }
     }

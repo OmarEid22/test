@@ -19,8 +19,16 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
+    host: smtp.gmail.com
+    port: 587
     username: mohsen03y@gmail.com
     password: ijanjwshigplidop
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 paypal:
   client-id: AU06lIPNQMm0onL8NczeNhNE3OhQgm4R31VSqnzbRIQIWYeZSAC1dwvAqTEfNzU_c68it7yVvkzSM99H

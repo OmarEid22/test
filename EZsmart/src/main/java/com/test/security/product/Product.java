@@ -31,7 +31,9 @@ public class Product {
     private Long id;
 
     private String name;
-    private double price;
+    private Double price;
+    @Column(nullable = true)
+    private Double sellingPrice;
     private String description;
     private String image;
     @Column(nullable = true)
@@ -40,7 +42,8 @@ public class Product {
     private Boolean specialOffer;
     @Column(nullable = true)
     private String hardwareSpecifications;
-
+    @Column(nullable = true)
+    private Double discountPrice;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -54,68 +57,5 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-
-    public String getDescription() { return description; }
-
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-    public Long getQuantityAvailable() {
-        return quantityAvailable;
-    }
-    public void setQuantityAvailable(Long quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
-    }
-
-    public Boolean getSpecialOffer() {
-        return specialOffer;
-    }
-
-    public void setSpecialOffer(Boolean specialOffer) {
-        this.specialOffer = specialOffer;
-    }
-
-    public String getHardwareSpecifications() {
-        return hardwareSpecifications;
-    }
-    public void setHardwareSpecifications(String hardwareSpecifications) {
-        this.hardwareSpecifications = hardwareSpecifications;
-    }
-
-    public Seller getSeller() {
-        return seller;
-    }
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
 
 }

@@ -28,6 +28,10 @@ public class Category {
 
     private String name;
 
+    private String description;
+
+    private String image;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     @Builder.Default

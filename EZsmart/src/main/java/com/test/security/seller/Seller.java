@@ -38,6 +38,7 @@ public class Seller {
 
     //name , mobie , mail , bankAccountNumber , bankAccountHolderName , TIN , swiftCode , logo , banner
     private String name;
+    private String businessName;
     private String mobile;
     private String mail;
     private String bankAccountNumber;
@@ -50,7 +51,7 @@ public class Seller {
     //list of addresses
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private List<Map<String, Object>> addresses;
+    private Map<String, Object> address;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Product> products = new ArrayList<>();
@@ -70,74 +71,5 @@ public class Seller {
 //        this.user = user;
 //    }
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getBankAccountNumber() {
-        return bankAccountNumber;
-    }
-    public void setBankAccountNumber(String bankAccountNumber) {
-        this.bankAccountNumber = bankAccountNumber;
-    }
-
-    public String getBankAccountHolderName() {
-        return bankAccountHolderName;
-    }
-    public void setBankAccountHolderName(String bankAccountHolderName) {
-        this.bankAccountHolderName = bankAccountHolderName;
-    }
-
-    public String getTIN() {
-        return TIN;
-    }
-    public void setTIN(String TIN) {
-        this.TIN = TIN;
-    }
-
-    public String getSwiftCode() {
-        return swiftCode;
-    }
-    public void setSwiftCode(String swiftCode) {
-        this.swiftCode = swiftCode;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public String getBanner() {
-        return banner;
-    }
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
-
-//    public List<JsonNode> getAddresses() {
-//        return addresses;
-//    }
-//    public void setAddresses(List<JsonNode> addresses) {
-//        this.addresses = addresses;
-//    }
 
 }

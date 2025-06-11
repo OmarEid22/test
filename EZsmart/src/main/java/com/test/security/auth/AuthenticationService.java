@@ -68,7 +68,6 @@ public class AuthenticationService {
 
     public void requestOtp(OtpRequest request) {
         String otp = otpService.generateOtp(request.getEmail());
-        emailService.sendOtpEmail(request.getEmail(), otp);
     }
 
     public AuthenticationResponse verifyOtpAndAuthenticate(OtpRequest request) {

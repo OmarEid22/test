@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your OTP for EZsmart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .otp-container {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .otp-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #007bff;
+            letter-spacing: 5px;
+        }
+        .footer {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome to EZsmart</h2>
+    <p>Your One-Time Password (OTP) for authentication is:</p>
+    
+    <div class="otp-container">
+        <div class="otp-code" th:text="${otp}">123456</div>
+    </div>
+    
+    <p>This OTP will expire in 5 minutes.</p>
+    <p>If you didn't request this OTP, please ignore this email.</p>
+    
+    <div class="footer">
+        <p>This is an automated message, please do not reply to this email.</p>
+        <p>&copy; 2025 EZsmart. All rights reserved.</p>
+    </div>
+</body>
+</html>

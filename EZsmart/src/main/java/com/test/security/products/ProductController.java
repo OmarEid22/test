@@ -113,4 +113,21 @@ public class ProductController {
         }
         return productService.getProductsBySeller(seller.getId().longValue());
     }
+
+    //get product by category, dicountPrice, specialOffer and price range
+    @GetMapping("/filter")
+    public List<Product> searchProducts(@RequestParam(required = false) Long categoryId,
+                                        @RequestParam(required = false) Double discountPrice,
+                                        @RequestParam(required = false) Boolean specialOffer,
+                                        @RequestParam(required = false) Double priceRangeMin,
+                                        @RequestParam(required = false) Double priceRangeMax) {
+                                            System.out.println(categoryId);
+        System.out.println(discountPrice);
+        System.out.println(specialOffer);
+        System.out.println(priceRangeMin);
+        System.out.println(priceRangeMax);
+        return productService.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax);
+    
+    }
+        
 }

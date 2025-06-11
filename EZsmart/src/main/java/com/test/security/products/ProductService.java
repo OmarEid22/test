@@ -82,15 +82,23 @@ public class ProductService {
         return productRepository.findBySellerId(sellerId);
     }
 
+    //get product by category, dicountPrice, specialOffer and price range
+    //all fields are optional
+    public List<Product> searchProducts(Long categoryId, Double discountPrice, Boolean specialOffer, Double priceRangeMin, Double priceRangeMax) {
+        return productRepository.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax);
+    }
+
     // Shared update logic
     private void updateProductFields(Product existingProduct, Product updatedProduct) {
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setSellingPrice(updatedProduct.getSellingPrice());
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setImage(updatedProduct.getImage());
         existingProduct.setCategory(updatedProduct.getCategory());
         existingProduct.setQuantityAvailable(updatedProduct.getQuantityAvailable());
         existingProduct.setSpecialOffer(updatedProduct.getSpecialOffer());
+        existingProduct.setDiscountPrice(updatedProduct.getDiscountPrice());
         existingProduct.setHardwareSpecifications(updatedProduct.getHardwareSpecifications());
     }
 }

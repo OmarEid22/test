@@ -4,6 +4,8 @@ import com.test.security.user.User;
 import com.test.security.seller.Seller;
 import com.test.security.product.Product;
 import com.test.security.products.ProductService;
+import com.test.security.order.Order;
+import com.test.security.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.List;
 public class OrderItemController {
     private final OrderItemService orderItemService;
     private final ProductService productService;
+    private final UserRepository userRepository;
 
 
     @PostMapping
@@ -63,9 +66,22 @@ public class OrderItemController {
         return ResponseEntity.ok(orderItemService.getOrderItemsBySellerId(sellerId));
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
         orderItemService.deleteOrderItem(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/seller/stats")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<SellerOrderStatsDTO> getSellerOrderStats(@AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
+        return ResponseEntity.ok(orderItemService.getSellerOrderStats(seller.getId().longValue()));
     }
 } 

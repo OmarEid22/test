@@ -2,6 +2,8 @@ package com.test.security.category;
 import com.test.security.seller.Seller;
 import com.test.security.user.User;
 import com.test.security.user.UserRepository;
+import com.test.security.product.Product;
+import com.test.security.products.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
     private final UserRepository userRepository;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -50,4 +53,10 @@ public class CategoryController {
         }
         return categoryService.getTopSellingCategoriesBySeller(seller.getId().longValue());
     }
+
+    @GetMapping("/{id}/products")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getAllProducts(id));
+    }
+
 }

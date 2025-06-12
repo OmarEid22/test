@@ -53,4 +53,9 @@ public class OrderItem {
         this.unitPrice = this.product.getPrice();
         this.subtotal = this.unitPrice * this.quantity;
     }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 } 

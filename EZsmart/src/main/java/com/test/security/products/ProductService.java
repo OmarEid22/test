@@ -82,8 +82,7 @@ public class ProductService {
         return productRepository.findBySellerId(sellerId);
     }
 
-    //get product by category, dicountPrice, specialOffer and price range
-    //all fields are optional
+    
     public List<Product> searchProducts(Long categoryId, Double discountPrice, Boolean specialOffer, Double priceRangeMin, Double priceRangeMax) {
         return productRepository.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax);
     }

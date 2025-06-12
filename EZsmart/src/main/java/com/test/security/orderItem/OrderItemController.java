@@ -53,17 +53,16 @@ public class OrderItemController {
         return ResponseEntity.ok(orderItemService.updateOrderItemStatus(id, request.getStatus()));
     }
 
-    @GetMapping("/seller/{sellerId}")
+    @GetMapping("/seller")
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<List<OrderItemDTO>> getOrderItemsBySellerId(
-            @PathVariable int sellerId,
             @AuthenticationPrincipal User authenticatedUser) {
-        System.out.println("sellerId: " + sellerId);
-        System.out.println("authenticatedUser: " + authenticatedUser.getSeller().getId());
-        if (authenticatedUser.getSeller().getId() != sellerId) {
-            throw new AccessDeniedException("You are not authorized to access this resource");
+
+        if(!authenticatedUser.getRole().equals("ROLE_SELLER")) {
+            throw new RuntimeException("You are not authorized to access this resource");
         }
-        return ResponseEntity.ok(orderItemService.getOrderItemsBySellerId(sellerId));
+        Seller seller = authenticatedUser.getSeller();
+        return ResponseEntity.ok(orderItemService.getOrderItemsBySellerId(seller.getId()));
     }
 
 

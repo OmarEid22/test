@@ -3,12 +3,16 @@ package com.test.security.category;
 public class CategoryDTO {
     private Long id;
     private String name;
+    private String description;
+    private String image;
 
     public CategoryDTO() {}
 
     public CategoryDTO(Category category) {
         this.id = category.getId();
         this.name = category.getName();
+        this.description = category.getDescription();
+        this.image = category.getImage();
     }
 
     // Getters and setters

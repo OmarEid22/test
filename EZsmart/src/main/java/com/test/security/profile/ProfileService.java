@@ -76,8 +76,7 @@ public class ProfileService {
                     return profileRepository.save(newProfile);
                 });
 
-        // Update only the image
-        existingProfile.setImage(updatedProfile.getImage());
+        
         Profile savedProfile = profileRepository.save(existingProfile);
         return ProfileDTO.fromProfile(savedProfile);
     }

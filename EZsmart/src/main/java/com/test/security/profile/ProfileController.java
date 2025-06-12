@@ -31,8 +31,8 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.createProfile(user, profile));
     }
 
-    @PutMapping("/image")
-    public ResponseEntity<ProfileDTO> updateProfileImage(
+    @PutMapping("/update")
+    public ResponseEntity<ProfileDTO> updateProfile(
             @AuthenticationPrincipal User user,
             @RequestBody Profile profile) {
         return ResponseEntity.ok(profileService.updateProfile(user, profile));

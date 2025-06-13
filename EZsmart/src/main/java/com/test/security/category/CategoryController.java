@@ -59,4 +59,13 @@ public class CategoryController {
         return ResponseEntity.ok(productService.getAllProducts(id));
     }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<CategoryDTO>> getAllCategoriesWithProducts(){
+        List<CategoryDTO> catDto =  categoryService.getAllCategories();
+        for(CategoryDTO catDto1 : catDto){
+            catDto1.setProducts(productService.getAllProducts(catDto1.getId()));
+        }
+       return ResponseEntity.ok(catDto);
+    }
+
 }

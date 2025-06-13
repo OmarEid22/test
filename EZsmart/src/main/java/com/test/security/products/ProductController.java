@@ -1,8 +1,14 @@
 package com.test.security.products;
 
+import com.test.security.category.Category;
+import com.test.security.category.CategoryDTO;
+import com.test.security.category.CategoryMapper;
+import com.test.security.category.CategoryService;
 import com.test.security.product.Product;
 
 import com.test.security.seller.Seller;
+import com.test.security.seller.SellerRepository;
+import com.test.security.seller.SellerService;
 import com.test.security.user.User;
 import com.test.security.user.UserRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +24,16 @@ public class ProductController {
 
     private final ProductService productService;
     private final UserRepository userRepository;
+    private final SellerService sellerService;
+    private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
-    public ProductController(ProductService productService, UserRepository userRepository) {
+    public ProductController(ProductService productService, UserRepository userRepository, SellerService sellerService, CategoryService categoryService , CategoryMapper categoryMapper) {
         this.productService = productService;
         this.userRepository = userRepository;
+        this.sellerService = sellerService;
+        this.categoryService = categoryService;
+        this.categoryMapper = categoryMapper;
     }
 
 
@@ -46,6 +58,13 @@ public class ProductController {
         if (seller == null) {
             throw new RuntimeException("No seller associated with this user");
         }
+        Long categoryId = product.getCategory().getId();
+        CategoryDTO categoryDTO = categoryService.getCategoryById(categoryId);
+        if (categoryDTO == null) {
+            throw new RuntimeException("Category not found");
+        }
+        Category category = categoryMapper.toEntity(categoryDTO);
+        product.setCategory(category);
         product.setSeller(seller);
         return productService.addProductAsSeller(product);
     }
@@ -111,6 +130,15 @@ public class ProductController {
         if (seller == null) {
             throw new RuntimeException("No seller associated with this user");
         }
+        return productService.getProductsBySeller(seller.getId().longValue());
+    }
+
+    //user gets specific seller products
+    @GetMapping("/sellerProducts/{sellerId}")
+    public List<Product> getSellerProducts(@PathVariable int sellerId) {
+       
+        Seller seller = sellerService.getSellerById(sellerId);
+        if(seller == null)throw new RuntimeException("No seller with the specified ID");
         return productService.getProductsBySeller(seller.getId().longValue());
     }
 

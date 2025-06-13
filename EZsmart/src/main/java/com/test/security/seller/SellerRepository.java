@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SellerRepository extends JpaRepository<Seller, Integer> {
-    //delete seller by id
+    public Seller findSellerById(int id);
 }

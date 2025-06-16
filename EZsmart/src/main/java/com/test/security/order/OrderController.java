@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.test.security.order.OrderRequest;
 
 import java.util.List;
 
@@ -51,7 +52,6 @@ public class OrderController {
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestBody OrderStatusRequest statusRequest) {
-
         return orderService.updateOrderStatus(id, statusRequest.getStatus())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

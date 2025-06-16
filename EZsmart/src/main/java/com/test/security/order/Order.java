@@ -32,6 +32,11 @@ public class Order {
     
     private Double totalAmount;
     
+    // Added for coupon functionality
+    private String couponCode;
+    private Double originalAmount;
+    private Double discountAmount;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     
@@ -39,6 +44,7 @@ public class Order {
     
     private String paymentMethod;
 
+    private String trackingNumber;
 
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

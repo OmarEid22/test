@@ -1,9 +1,13 @@
-package com.test.security.cart;
+package com.test.security.cartItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.test.security.user.User;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,6 +20,8 @@ public class CartItemDTO {
     private String productImage;
     private Double price;
     private Integer quantity;
+    private LocalDateTime createdAt;
+    private User user;
     
     public CartItemDTO(CartItem cartItem) {
         this.id = cartItem.getId();
@@ -24,5 +30,7 @@ public class CartItemDTO {
         this.productImage = cartItem.getProduct().getImage();
         this.price = cartItem.getProduct().getPrice();
         this.quantity = cartItem.getQuantity();
+        this.createdAt = cartItem.getCreatedAt();
+        this.user = cartItem.getUser();
     }
 } 

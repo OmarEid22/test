@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +32,16 @@ public class CategoryService {
     public CategoryDTO createCategory(Category category) {
         Category savedCategory = categoryRepository.save(category);
         return new CategoryDTO(savedCategory);
+    }
+
+    @Transactional
+    public Optional<CategoryDTO> updateCategory(Long id, Category categoryDetails) {
+        return categoryRepository.findById(id)
+                .map(existingCategory -> {
+                    existingCategory.setName(categoryDetails.getName());
+                    Category updatedCategory = categoryRepository.save(existingCategory);
+                    return new CategoryDTO(updatedCategory);
+                });
     }
 
     public void deleteCategory(Long id) {

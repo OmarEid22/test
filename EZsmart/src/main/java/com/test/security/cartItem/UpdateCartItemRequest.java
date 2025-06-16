@@ -1,4 +1,4 @@
-package com.test.security.cart;
+package com.test.security.cartItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddCartItemRequest {
-    private Long productId;
+public class UpdateCartItemRequest {
     private Integer quantity;
 } 

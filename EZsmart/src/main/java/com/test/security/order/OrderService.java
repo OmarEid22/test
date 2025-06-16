@@ -3,9 +3,9 @@ package com.test.security.order;
 import com.test.security.orderItem.OrderItem;
 import com.test.security.orderItem.OrderItemDTO;
 import com.test.security.orderItem.OrderItemRequest;
+import com.test.security.coupon.CouponService;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
-
 import com.test.security.user.User;
 import com.test.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final CouponService couponService;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -55,6 +56,7 @@ public class OrderService {
                 .status(OrderStatus.PENDING)
                 .shippingAddress(orderRequest.getShippingAddress())
                 .paymentMethod(orderRequest.getPaymentMethod())
+                .couponCode(orderRequest.getCouponCode())
                 .build();
         
         // Calculate total amount and add order items
@@ -86,6 +88,12 @@ public class OrderService {
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
         
+        // Apply coupon if provided
+        if (orderRequest.getCouponCode() != null) {
+            double discountAmount = couponService.calculateDiscount(orderRequest.getCouponCode(), totalAmount);
+            order.setTotalAmount(totalAmount - discountAmount);
+        }
+
         Order savedOrder = orderRepository.save(order);
         return new OrderDTO(savedOrder);
     }
@@ -106,5 +114,4 @@ public class OrderService {
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
-
 } 

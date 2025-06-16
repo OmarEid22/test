@@ -1,4 +1,4 @@
-package com.test.security.cart;
+package com.test.security.seller;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateCartItemRequest {
-    private Integer quantity;
+public class SellerStatusRequest {
+    private SellerStatus status;
 } 

@@ -117,6 +117,8 @@ public class ProductController {
     @DeleteMapping("/admin/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteProductAsAdmin(@PathVariable Long productId) {
+        if(productService.getProductById(productId).isEmpty())
+            throw new RuntimeException("Product not found");
         productService.deleteProductAsAdmin(productId);
     }
 

@@ -32,12 +32,27 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody Category category) {
         return ResponseEntity.ok(categoryService.createCategory(category));
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateCategory(
+            @PathVariable Long id,
+            @RequestBody Category categoryDetails) {
+        if(categoryService.getCategoryById(id) == null)
+            throw  new RuntimeException("Category not found");
+        categoryService.updateCategory(id, categoryDetails);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        if(categoryService.getCategoryById(id) == null)
+            throw new RuntimeException("Category not found");
         categoryService.deleteCategory(id);
         return ResponseEntity.ok().build();
     }

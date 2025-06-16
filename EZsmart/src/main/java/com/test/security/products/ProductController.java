@@ -150,13 +150,15 @@ public class ProductController {
                                         @RequestParam(required = false) Double discountPrice,
                                         @RequestParam(required = false) Boolean specialOffer,
                                         @RequestParam(required = false) Double priceRangeMin,
-                                        @RequestParam(required = false) Double priceRangeMax) {
+                                        @RequestParam(required = false) Double priceRangeMax,
+                                        @RequestParam(required = false) String sortBy) {
                                             System.out.println(categoryId);
         System.out.println(discountPrice);
         System.out.println(specialOffer);
         System.out.println(priceRangeMin);
         System.out.println(priceRangeMax);
-        return productService.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax);
+        System.out.println(sortBy);
+        return productService.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax , sortBy);
     
     }
         

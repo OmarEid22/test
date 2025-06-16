@@ -83,8 +83,8 @@ public class ProductService {
     }
 
     
-    public List<Product> searchProducts(Long categoryId, Double discountPrice, Boolean specialOffer, Double priceRangeMin, Double priceRangeMax) {
-        return productRepository.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax);
+    public List<Product> searchProducts(Long categoryId, Double discountPrice, Boolean specialOffer, Double priceRangeMin, Double priceRangeMax, String sortBy) {
+        return productRepository.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax , sortBy);
     }
 
     // Shared update logic

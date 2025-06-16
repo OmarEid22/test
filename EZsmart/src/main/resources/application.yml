@@ -40,6 +40,10 @@ logging:
     root: debug
     org.springframework.security: debug
     org.hibernate.SQL: debug
-
+stripe:
+  secret:
+    key: sk_test_51RYaQ7PSlFFgKCumtZ62rbM4mug4uguMtByvMlts480JyAZUnG9sFfA9bHsCbRzx9l9WV6JZP4w10F6ghiEsIBlp00AzGKQ5g4
+  webhook:
+    secret: whsec_f1296feea837ecc376b5e0418b21b293464f12de2d8b4715bb6db7787ef78266
 server:
   port: 8080

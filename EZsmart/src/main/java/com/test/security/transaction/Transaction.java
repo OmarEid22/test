@@ -1,5 +1,5 @@
 package com.test.security.transaction;
-import com.test.security.payment.PaymentData;
+//import com.test.security.payment.PaymentData;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,9 +22,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id")
-    private PaymentData payment;
+//    @OneToOne
+//    @JoinColumn(name = "payment_id")
+//    private PaymentData payment;
 
     private String payment_gateway;
     private Double amount;

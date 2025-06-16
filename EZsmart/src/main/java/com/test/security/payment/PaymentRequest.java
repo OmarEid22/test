@@ -1,19 +1,19 @@
 package com.test.security.payment;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
-@Entity
-@Table(name = "payments")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class PaymentData {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class PaymentRequest {
+    private BigDecimal amount;
+    private String currency;
+    private Long orderId;
+
+    // Getters and setters
 }

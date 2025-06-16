@@ -3,8 +3,9 @@ package com.test.security.seller;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 @Repository
 public interface SellerRepository extends JpaRepository<Seller, Integer> {
-    //delete seller by id
+    List<Seller> findByStatus(SellerStatus status);
 }

@@ -1,7 +1,5 @@
 package com.test.security.seller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.test.security.product.Product;
 import com.test.security.user.User;
@@ -31,7 +29,7 @@ public class Seller {
     @GeneratedValue
     private int id;
 
-    @JsonManagedReference
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
@@ -46,6 +44,10 @@ public class Seller {
     private String swiftCode;
     private String logo;
     private String banner;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private SellerStatus status = SellerStatus.PENDING_VERIFICATION;
 
     //list of addresses
     @Type(JsonType.class)
@@ -133,6 +135,14 @@ public class Seller {
     }
     public void setBanner(String banner) {
         this.banner = banner;
+    }
+
+    public SellerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SellerStatus status) {
+        this.status = status;
     }
 
 //    public List<JsonNode> getAddresses() {

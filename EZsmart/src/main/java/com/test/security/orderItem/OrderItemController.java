@@ -1,5 +1,6 @@
 package com.test.security.orderItem;
 
+import com.test.security.user.Role;
 import com.test.security.user.User;
 import com.test.security.seller.Seller;
 import com.test.security.product.Product;
@@ -57,8 +58,10 @@ public class OrderItemController {
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<List<OrderItemDTO>> getOrderItemsBySellerId(
             @AuthenticationPrincipal User authenticatedUser) {
-
-        if(!authenticatedUser.getRole().equals("ROLE_SELLER")) {
+        System.out.println(authenticatedUser.getRole());
+        System.out.println(authenticatedUser.getSeller());
+        System.out.println(authenticatedUser.getEmail());
+        if(!authenticatedUser.getRole().equals(Role.ROLE_SELLER)) {
             throw new RuntimeException("You are not authorized to access this resource");
         }
         Seller seller = authenticatedUser.getSeller();

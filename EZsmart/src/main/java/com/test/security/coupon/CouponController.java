@@ -110,12 +110,13 @@ public class CouponController {
 
     @GetMapping("/validate")
     public ResponseEntity<CouponValidationResponse> validateCoupon(
-            @RequestBody CouponValidationRequest request) {
+            @RequestParam String code,
+            @RequestParam Double orderTotal) {
         
-        boolean isApplicable = couponService.isCouponApplicable(request.getCode(), request.getOrderTotal());
+        boolean isApplicable = couponService.isCouponApplicable(code, orderTotal);
         
         if (isApplicable) {
-            double discountAmount = couponService.calculateDiscount(request.getCode(), request.getOrderTotal());
+                double discountAmount = couponService.calculateDiscount(code, orderTotal);
             return ResponseEntity.ok(
                     new CouponValidationResponse(true, discountAmount, "Coupon is valid and applied")
             );

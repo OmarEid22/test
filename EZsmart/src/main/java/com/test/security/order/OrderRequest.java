@@ -17,5 +17,8 @@ public class OrderRequest {
     private String paymentMethod;
     private String couponCode;
     private List<OrderItemRequest> items;
+    private Double discountAmount;
+    private Double originalAmount;
+    private String CouponCode;
 }
 

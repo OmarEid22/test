@@ -32,4 +32,9 @@ public class UserService {
         user.setSeller(existingSeller);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 }

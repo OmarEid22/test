@@ -2,6 +2,7 @@ package com.test.security.orderItem;
 
 import com.test.security.order.Order;
 import com.test.security.order.OrderRepository;
+import com.test.security.order.OrderService;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Transactional
     public OrderItemDTO createOrderItem(OrderItemRequest request) {
@@ -33,7 +35,7 @@ public class OrderItemService {
                 .quantity(request.getQuantity())
                 .unitPrice(product.getPrice())
                 .subtotal(product.getPrice() * request.getQuantity())
-                .status(OrderItemStatus.PENDING)
+                .status(OrderItemStatus.PROCESSING)
                 .build();
 
         return new OrderItemDTO(orderItemRepository.save(orderItem));
@@ -59,6 +61,7 @@ public class OrderItemService {
                 .orElseThrow(() -> new EntityNotFoundException("Order item not found"));
         
         orderItem.setStatus(status);
+        orderService.updateOrderStatusIfAllItemsMatch(orderItem.getOrder().getId(), status);
         return new OrderItemDTO(orderItemRepository.save(orderItem));
     }
 

@@ -1,10 +1,10 @@
 package com.test.security.order;
 
 public enum OrderStatus {
-    PENDING,
-    PROCESSING, 
+    PLACED,
+    PACKED,
+    PAID,
     SHIPPED,
     DELIVERED,
-    CANCELLED,
-    PAID
-} 
+    CANCELLED
+}

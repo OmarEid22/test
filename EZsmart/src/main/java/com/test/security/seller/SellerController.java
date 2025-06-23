@@ -9,7 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/sellers")
@@ -94,6 +96,21 @@ public class SellerController {
         sellerService.deleteSeller(sellerId);
     }
 
+    //get seller by seller status
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseBody
+    public List<Seller> getSellersByStatus(@PathVariable SellerStatus status) {
+        return sellerService.getSellersByStatus(status);
+    }
 
+    //get seller status names
+    @GetMapping("/status")
+    @ResponseBody
+    public List<String> getSellerStatusNames() {
+        return Arrays.stream(SellerStatus.values())
+                .map(SellerStatus::name)
+                .collect(Collectors.toList());
+    }
 
 }

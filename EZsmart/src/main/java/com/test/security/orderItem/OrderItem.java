@@ -47,7 +47,7 @@ public class OrderItem {
 
     @PrePersist
     protected void onCreate() {
-        this.status = OrderItemStatus.PENDING;
+        this.status = OrderItemStatus.PROCESSING;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.unitPrice = this.product.getPrice();

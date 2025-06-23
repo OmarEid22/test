@@ -4,6 +4,8 @@ import com.test.security.orderItem.OrderItem;
 import com.test.security.orderItem.OrderItemDTO;
 import com.test.security.orderItem.OrderItemRequest;
 import com.test.security.coupon.CouponService;
+import com.test.security.orderItem.OrderItemStatus;
+import com.test.security.orderItem.OrderItemRepository;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import com.test.security.user.User;
@@ -25,6 +27,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CouponService couponService;
+    private final OrderItemRepository orderItemsRepository;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -53,10 +56,12 @@ public class OrderService {
         Order order = Order.builder()
                 .user(orderUser)
                 .orderDate(LocalDateTime.now())
-                .status(OrderStatus.PENDING)
+                .status(OrderStatus.PLACED)
                 .shippingAddress(orderRequest.getShippingAddress())
                 .paymentMethod(orderRequest.getPaymentMethod())
                 .couponCode(orderRequest.getCouponCode())
+                .originalAmount(orderRequest.getOriginalAmount())
+                .discountAmount(orderRequest.getDiscountAmount())
                 .build();
         
         // Calculate total amount and add order items
@@ -87,12 +92,12 @@ public class OrderService {
         
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
-        
-        // Apply coupon if provided
-        if (orderRequest.getCouponCode() != null) {
-            double discountAmount = couponService.calculateDiscount(orderRequest.getCouponCode(), totalAmount);
-            order.setTotalAmount(totalAmount - discountAmount);
-        }
+
+//        // Apply coupon if provided
+//        if (orderRequest.getCouponCode() != null) {
+//            double discountAmount = couponService.calculateDiscount(orderRequest.getCouponCode(), totalAmount);
+//            order.setTotalAmount(totalAmount - discountAmount);
+//        }
 
         Order savedOrder = orderRepository.save(order);
         return new OrderDTO(savedOrder);
@@ -108,6 +113,36 @@ public class OrderService {
             return Optional.of(new OrderDTO(updatedOrder));
         }
         return Optional.empty();
+    }
+
+    public void updateOrderStatusIfAllItemsMatch(Long orderId, OrderItemStatus targetStatus) {
+        List<OrderItem> items = orderItemsRepository.findByOrder(orderRepository.findById(orderId).get());
+        if (items.isEmpty()) {
+            throw new RuntimeException("Order not found");
+        }
+        boolean allMatch = items.stream()
+                .allMatch(item -> item.getStatus() == targetStatus);
+
+        if (allMatch) {
+            OrderStatus status = mapOrderItemStatusToOrderStatus(targetStatus);
+            updateOrderStatus(orderId, status);
+        }
+    }
+
+   // Map orderItemStatus to OrderStatus
+    private OrderStatus mapOrderItemStatusToOrderStatus(OrderItemStatus status) {
+        switch (status) {
+            case PACKED:
+                return OrderStatus.PACKED;
+            case SHIPPED:
+                return OrderStatus.SHIPPED;
+            case DELIVERED:
+                return OrderStatus.DELIVERED;
+            case CANCELLED:
+                return OrderStatus.CANCELLED;
+            default:
+                return OrderStatus.PLACED;
+        }
     }
 
     @Transactional

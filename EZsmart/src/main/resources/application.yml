@@ -30,10 +30,6 @@ spring:
           starttls:
             enable: true
 
-paypal:
-  client-id: AU06lIPNQMm0onL8NczeNhNE3OhQgm4R31VSqnzbRIQIWYeZSAC1dwvAqTEfNzU_c68it7yVvkzSM99H
-  client-secret: ECdPA1hUYLd2ZqOGCgEDkqjskLNad2qM3499U1O0jtS0tWfUL92bghI03Zkd6ZMU-rOv9r9d1t4YQ9UN
-  mode: sandbox # Use #sandbox' for testing and 'live' for Production
 
 logging:
   level:
@@ -44,6 +40,6 @@ stripe:
   secret:
     key: sk_test_51RYaQ7PSlFFgKCumtZ62rbM4mug4uguMtByvMlts480JyAZUnG9sFfA9bHsCbRzx9l9WV6JZP4w10F6ghiEsIBlp00AzGKQ5g4
   webhook:
-    secret: whsec_f1296feea837ecc376b5e0418b21b293464f12de2d8b4715bb6db7787ef78266
+    secret: whsec_Ys6WXvyQxili7BdWV5i5Awi4tWJNxKBR
 server:
   port: 8080

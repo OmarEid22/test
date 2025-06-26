@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
+import com.test.security.product.Product;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,10 +15,7 @@ import java.time.LocalDateTime;
 public class OrderItemDTO {
     private Long id;
     private Long orderId;
-    private Long productId;
-    private String productName;
-    private Integer quantity;
-    private Double unitPrice;
+    private Product product;
     private Double subtotal;
     private OrderItemStatus status;
     private LocalDateTime createdAt;
@@ -29,10 +28,7 @@ public class OrderItemDTO {
     public OrderItemDTO(OrderItem orderItem) {
         this.id = orderItem.getId();
         this.orderId = orderItem.getOrder().getId();
-        this.productId = orderItem.getProduct().getId();
-        this.productName = orderItem.getProduct().getName();
-        this.quantity = orderItem.getQuantity();
-        this.unitPrice = orderItem.getUnitPrice();
+        this.product = orderItem.getProduct();
         this.subtotal = orderItem.getSubtotal();
         this.status = orderItem.getStatus();
         this.createdAt = orderItem.getCreatedAt();

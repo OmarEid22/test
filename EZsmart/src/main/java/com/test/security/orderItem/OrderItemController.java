@@ -44,7 +44,7 @@ public class OrderItemController {
             @RequestBody OrderItemStatusRequest request,
             @AuthenticationPrincipal User authenticatedUser) {
         OrderItemDTO orderItem = orderItemService.getOrderItemById(id);
-        Product product = productService.getProductById(orderItem.getProductId())
+        Product product = productService.getProductById(orderItem.getProduct().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
         
         Seller seller = product.getSeller();

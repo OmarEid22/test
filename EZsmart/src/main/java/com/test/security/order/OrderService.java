@@ -6,6 +6,8 @@ import com.test.security.orderItem.OrderItemRequest;
 import com.test.security.coupon.CouponService;
 import com.test.security.orderItem.OrderItemStatus;
 import com.test.security.orderItem.OrderItemRepository;
+import com.test.security.orderStatusHistory.OrderStatusHistory;
+import com.test.security.orderStatusHistory.OrderStatusHistoryService;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import com.test.security.user.User;
@@ -28,6 +30,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CouponService couponService;
     private final OrderItemRepository orderItemsRepository;
+    private final OrderStatusHistoryService orderStatusHistoryService;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -110,6 +113,10 @@ public class OrderService {
             Order order = optionalOrder.get();
             order.setStatus(status);
             Order updatedOrder = orderRepository.save(order);
+            OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+            orderStatusHistory.setOrder(updatedOrder);
+            orderStatusHistory.setStatus(status);
+            orderStatusHistoryService.saveOrderStatusHistory(orderStatusHistory);
             return Optional.of(new OrderDTO(updatedOrder));
         }
         return Optional.empty();

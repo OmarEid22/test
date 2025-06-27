@@ -33,11 +33,7 @@ public class SecurityConfigration {
                         .requestMatchers("/api/products/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/categories/**").permitAll()
-                        .requestMatchers("/api/sellers/**").permitAll()
-                        .requestMatchers("/api/sellers").permitAll()
-                        .requestMatchers("/api/orders/**").permitAll()
-                        .requestMatchers("/api/order-items/**").permitAll()
-                        .requestMatchers("/api/profile/**").permitAll()
+                        .requestMatchers("api/offers").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

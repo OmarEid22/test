@@ -1,5 +1,6 @@
 package com.test.security.orderItem;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.test.security.order.Order;
 import com.test.security.product.Product;
 import jakarta.persistence.*;
@@ -23,6 +24,7 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 

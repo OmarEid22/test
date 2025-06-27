@@ -27,13 +27,13 @@ public class FavouriteController {
     }
 
     @PostMapping
-    public Favourite addFavourite(@AuthenticationPrincipal User user, @RequestBody Long productId) {
-        return favouriteService.addFavourite(user, productId);
+    public Favourite addFavourite(@AuthenticationPrincipal User user, @RequestBody FavouriteRequest request) {
+        return favouriteService.addFavourite(user, request.getProductId());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFavourite(@AuthenticationPrincipal User user, @RequestBody Long productId) {
-        favouriteService.deleteFavourite(user, productId);
+    public void deleteFavourite(@AuthenticationPrincipal User user, @PathVariable Long id) {
+        favouriteService.deleteFavourite(user, id);
     }
 
     @GetMapping("/check")

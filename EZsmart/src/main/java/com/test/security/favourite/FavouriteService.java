@@ -4,6 +4,7 @@ import com.test.security.user.User;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 import java.util.List;
@@ -36,7 +37,11 @@ public class FavouriteService {
         return favouriteRepository.save(favourite);
     }
 
+    @Transactional
     public void deleteFavourite(User user, Long productId) {
+        if(!isFavourite(user, productId)) {
+            throw new RuntimeException("Favourite not found");
+        }
         favouriteRepository.deleteByUserIdAndProductId(user.getId(), productId);
     }
 

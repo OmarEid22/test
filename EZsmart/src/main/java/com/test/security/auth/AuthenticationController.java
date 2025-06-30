@@ -17,8 +17,8 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
-        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already registered");
+        if(!userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("No user found with this email");
         }
         return ResponseEntity.ok(service.register(request));
     }

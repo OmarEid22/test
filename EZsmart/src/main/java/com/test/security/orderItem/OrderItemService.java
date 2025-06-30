@@ -3,6 +3,7 @@ package com.test.security.orderItem;
 import com.test.security.order.Order;
 import com.test.security.order.OrderRepository;
 import com.test.security.order.OrderService;
+import com.test.security.order.OrderStatus;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,5 +80,22 @@ public class OrderItemService {
     public SellerOrderStatsDTO getSellerOrderStats(Long sellerId) {
         return orderItemRepository.getSellerOrderStats(sellerId)
                 .orElse(new SellerOrderStatsDTO(0L, 0L, 0.0, sellerId, null));
+    }
+
+    public List<OrderItemDTO> getPaidOrderItemsBySellerId(int sellerId) {
+        List<OrderItemDTO> orderItems = getOrderItemsBySellerId(sellerId);
+        orderItems = orderItems.stream()
+                .filter(item -> orderService.getOrderById(item.getOrderId()).get().getStatus() == OrderStatus.PAID)
+                .collect(Collectors.toList());
+        return orderItems;
+    }
+
+    public Map<String, Double> getMonthlySalesBySellerId(int sellerId) {
+        List<OrderItemDTO> orderItems = getPaidOrderItemsBySellerId(sellerId);
+        return orderItems.stream()
+                .collect(Collectors.groupingBy(
+                        item -> item.getCreatedAt().getMonth().name(),
+                        Collectors.summingDouble(OrderItemDTO::getSubtotal)
+                ));
     }
 } 

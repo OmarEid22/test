@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order-items")
@@ -85,5 +86,31 @@ public class OrderItemController {
             throw new RuntimeException("No seller associated with this user");
         }
         return ResponseEntity.ok(orderItemService.getSellerOrderStats(seller.getId().longValue()));
+    }
+
+    //monthly revenue of seller
+    @GetMapping("/seller/monthly-revenue")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<Map<String, Double>> getMonthlyRevenueBySellerId(@AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
+        return ResponseEntity.ok(orderItemService.getMonthlySalesBySellerId(seller.getId()));
+    }
+
+    //get total revenue of seller
+    @GetMapping("/seller/total-revenue")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<Double> getTotalRevenueBySellerId(@AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
+        return ResponseEntity.ok(orderItemService.getMonthlySalesBySellerId(seller.getId()).values().stream().mapToDouble(Double::doubleValue).sum());
     }
 } 

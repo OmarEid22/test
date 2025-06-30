@@ -16,7 +16,6 @@ public class RegisterRequest {
     private String firstname;
     private String lastname;
     private String email;
-    private String password;
     private List<Map<String, Object>> addresses;
     private String mobile;
 

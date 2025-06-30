@@ -27,20 +27,19 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .role(Role.ROLE_USER)
-                .password(passwordEncoder.encode(request.getPassword()))
-                .addresses(request.getAddresses())
-                .mobile(request.getMobile())
-                .build();
+
+        User user = repository.findByEmail(request.getEmail()).get();
+
+        user.setAddresses(request.getAddresses());
+        user.setMobile(request.getMobile());
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
         repository.save(user);
         var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .roles(Collections.singleton(user.getRole()))
+                .userId(user.getId())
                 .build();
     }
 

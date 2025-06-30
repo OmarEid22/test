@@ -4,6 +4,10 @@ import com.test.security.order.Order;
 import com.test.security.order.OrderRepository;
 import com.test.security.order.OrderService;
 import com.test.security.order.OrderStatus;
+import com.test.security.user.User;
+import com.test.security.user.UserService;
+import com.test.security.payment.Payment;
+import com.test.security.payment.PaymentService;
 import com.test.security.product.Product;
 import com.test.security.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +26,8 @@ public class OrderItemService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderService orderService;
+    private final PaymentService paymentService;
+    private final UserService userservice;
 
     @Transactional
     public OrderItemDTO createOrderItem(OrderItemRequest request) {
@@ -98,4 +104,16 @@ public class OrderItemService {
                         Collectors.summingDouble(OrderItemDTO::getSubtotal)
                 ));
     }
+
+    public List<SellerPaymentsDTO> getLastPaymentsForSeller(int sellerId) {
+        List<OrderItemDTO> orderItems = getPaidOrderItemsBySellerId(sellerId);
+        return orderItems.stream()
+                .map(item -> {
+                    Payment payment = paymentService.getPaymentByOrderId(item.getOrderId()).get();
+                    return new SellerPaymentsDTO(item.getSubtotal() , payment.getPaymentDate(), userservice.getUserById(item.getUserId()).get());
+                })
+                .collect(Collectors.toList());
+    }
+
+
 } 

@@ -21,6 +21,9 @@ public class UserService {
         this.sellerRepository = sellerRepository;
     }
 
+    public Optional<User> getUserById(Integer id) {
+        return userRepository.findById(id);
+    }
 
     //update user role and seller_id
     @Transactional

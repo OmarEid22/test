@@ -5,6 +5,9 @@ import com.test.security.user.User;
 import com.test.security.seller.Seller;
 import com.test.security.product.Product;
 import com.test.security.products.ProductService;
+import com.test.security.payment.Payment;
+import com.test.security.payment.PaymentService;
+import com.test.security.order.OrderStatus;
 import com.test.security.order.Order;
 import com.test.security.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -112,5 +115,18 @@ public class OrderItemController {
             throw new RuntimeException("No seller associated with this user");
         }
         return ResponseEntity.ok(orderItemService.getMonthlySalesBySellerId(seller.getId()).values().stream().mapToDouble(Double::doubleValue).sum());
+    }
+
+    //get last Payments for seller
+    @GetMapping("/seller/last-payments")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
+    public ResponseEntity<List<SellerPaymentsDTO>> getLastPaymentsForSeller(@AuthenticationPrincipal User authenticatedUser) {
+        User user = userRepository.findById(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Seller seller = user.getSeller();
+        if (seller == null) {
+            throw new RuntimeException("No seller associated with this user");
+        }
+        return ResponseEntity.ok(orderItemService.getLastPaymentsForSeller(seller.getId()));
     }
 } 

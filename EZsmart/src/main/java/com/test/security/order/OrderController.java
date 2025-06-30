@@ -8,6 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.test.security.order.OrderRequest;
+import com.test.security.order.OrderService;
+import com.test.security.order.OrderRepository;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -62,5 +65,18 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.ok().build();
+    }
+
+    //cancel order
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<OrderDTO> cancelOrder(@AuthenticationPrincipal User user ,@PathVariable Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if(!order.getUser().equals(user)) {
+            throw new RuntimeException("You are not authorized to cancel this order");
+        }
+        return orderService.updateOrderStatus(id, OrderStatus.CANCELLED)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 } 

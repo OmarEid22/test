@@ -34,11 +34,13 @@ public class OtpService {
 
     @Transactional
     public boolean verifyOtp(String email, String otp) {
-        return otpTokenRepository.findByEmailAndOtp(email, otp)
-                .filter(token -> token.getExpiryTime().isAfter(LocalDateTime.now()))
+        return otpTokenRepository.findByEmail(email)
                 .map(token -> {
-                    otpTokenRepository.delete(token); // Remove after use
-                    return true;
+                    if (token.getOtp().equals(otp) && !token.getExpiryTime().isBefore(LocalDateTime.now())) {
+                        otpTokenRepository.deleteByEmail(email);
+                        return true;
+                    }
+                    return false;
                 })
                 .orElse(false);
     }

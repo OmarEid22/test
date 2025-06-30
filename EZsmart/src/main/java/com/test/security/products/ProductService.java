@@ -100,4 +100,8 @@ public class ProductService {
         existingProduct.setDiscountPrice(updatedProduct.getDiscountPrice());
         existingProduct.setHardwareSpecifications(updatedProduct.getHardwareSpecifications());
     }
+
+    public List<Product> searchProductsByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
 }

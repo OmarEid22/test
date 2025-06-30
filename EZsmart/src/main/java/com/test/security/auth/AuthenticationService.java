@@ -58,6 +58,7 @@ public class AuthenticationService {
               return AuthenticationResponse.builder()
                       .token(jwtToken)
                       .roles(Collections.singleton(user.getRole()))
+                      .userId(user.getId())
                       .build();
           }catch (AuthenticationException e){
               //log the error
@@ -83,6 +84,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .roles(Collections.singleton(user.getRole()))
+                .userId(user.getId())
                 .build();
     }
 

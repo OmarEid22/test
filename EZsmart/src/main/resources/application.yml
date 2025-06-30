@@ -23,15 +23,16 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
     host: smtp.gmail.com
-    port: 587
+    port: 465
     username: mohsen03y@gmail.com
     password: ijanjwshigplidop
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          ssl:
             enable: true
+            required: true
 
 
 logging:

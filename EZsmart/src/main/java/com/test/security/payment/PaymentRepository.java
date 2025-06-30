@@ -30,4 +30,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     java.util.List<Payment> findAllByOrderId(@Param("orderId") Long orderId);
 
     boolean existsByOrder(Order order);
+
+
 }

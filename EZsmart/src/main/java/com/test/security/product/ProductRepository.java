@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE (:categoryId IS NULL OR p.category.id = :categoryId) AND (:discountPrice IS NULL OR p.discountPrice >= :discountPrice) AND (:specialOffer IS NULL OR p.specialOffer = :specialOffer) AND (:priceRangeMin IS NULL OR p.price >= :priceRangeMin) AND (:priceRangeMax IS NULL OR p.price <= :priceRangeMax) ORDER BY CASE WHEN :sortBy = 'min' THEN p.price END ASC, CASE WHEN :sortBy = 'max' THEN p.price END DESC")
     List<Product> searchProducts(@Param("categoryId") Long categoryId, @Param("discountPrice") Double discountPrice, @Param("specialOffer") Boolean specialOffer, @Param("priceRangeMin") Double priceRangeMin, @Param("priceRangeMax") Double priceRangeMax , @Param("sortBy") String sortBy);
+
+    List<Product> findByNameContainingIgnoreCase(String name);
 }

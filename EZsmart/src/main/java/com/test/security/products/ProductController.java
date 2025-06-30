@@ -146,7 +146,7 @@ public class ProductController {
 
     //get product by category, dicountPrice, specialOffer and price range
     @GetMapping("/filter")
-    public List<Product> searchProducts(@RequestParam(required = false) Long categoryId,
+    public List<Product> filterProducts(@RequestParam(required = false) Long categoryId,
                                         @RequestParam(required = false) Double discountPrice,
                                         @RequestParam(required = false) Boolean specialOffer,
                                         @RequestParam(required = false) Double priceRangeMin,
@@ -160,6 +160,12 @@ public class ProductController {
         System.out.println(sortBy);
         return productService.searchProducts(categoryId, discountPrice, specialOffer, priceRangeMin, priceRangeMax , sortBy);
     
+    }
+
+    //search products by name
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
+        return productService.searchProductsByName(name);
     }
         
 }

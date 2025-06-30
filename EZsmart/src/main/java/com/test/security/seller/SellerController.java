@@ -58,6 +58,10 @@ public class SellerController {
         User user = userRepository.findById(authenticatedUser.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getRole().equals(Role.ROLE_SELLER)) {
+            System.out.println("Authenticated user: " + authenticatedUser.getEmail());
+            System.out.println("User: " + user.getEmail());
+            System.out.println("Authenticated user role: " + authenticatedUser.getRole());
+            System.out.println("user role: " + user.getRole());
             throw new RuntimeException("User is already a seller");
         } else if (user.getRole().equals(Role.ROLE_ADMIN)) {
             throw new RuntimeException("User is an admin");

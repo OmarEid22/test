@@ -52,7 +52,7 @@ public class Seller {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private SellerStatus status = SellerStatus.PENDING_VERIFICATION;
+    private SellerStatus status = SellerStatus.ACTIVE;
 
     //list of addresses
     @Type(JsonType.class)

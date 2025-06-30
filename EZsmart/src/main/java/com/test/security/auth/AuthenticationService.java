@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
@@ -78,6 +80,14 @@ public class AuthenticationService {
         // Check if user exists
         User user = repository.findByEmail(request.getEmail())
                 .orElseGet(() -> createNewUser(request.getEmail()));
+
+        //authenticate this user
+        var auth = new UsernamePasswordAuthenticationToken(
+                user.getEmail(),
+                null,
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
+        );
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
         var jwtToken = jwtService.generateToken(user, Collections.singleton(user.getRole()));
         return AuthenticationResponse.builder()
